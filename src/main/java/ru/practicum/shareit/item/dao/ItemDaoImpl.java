@@ -47,8 +47,8 @@ public class ItemDaoImpl implements ItemDao {
         return items.values().stream()
                 .filter(Item::isAvailable)
                 .filter(item ->
-                        Pattern.compile(String.format("^(.+)%s(.*)$", text.toLowerCase())
-                                        , Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE)
+                        Pattern.compile(String.format("^(.+)%s(.*)$", text.toLowerCase()),
+                                        Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE)
                                 .matcher(String.format("%s # %s", item.getName(), item.getDescription()))
                                 .matches()
                 )
