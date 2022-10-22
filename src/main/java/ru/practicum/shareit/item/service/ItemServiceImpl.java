@@ -19,8 +19,8 @@ import java.util.stream.Collectors;
 @Service
 public class ItemServiceImpl implements ItemService {
 
-    private ItemDao itemDao;
-    private UserDao userDao;
+    private final ItemDao itemDao;
+    private final UserDao userDao;
     private long id = 0;
 
     public ItemServiceImpl(ItemDao itemDao, UserDao userDao) {
@@ -45,7 +45,7 @@ public class ItemServiceImpl implements ItemService {
         User user = getUser(userId);
         Item existItem = itemDao.getItemById(itemId);
 
-        if (user.getId() != existItem.getOwner()) {
+        if (!user.getId().equals(existItem.getOwner())) {
             throw new ItemUpdateException(
                     String.format("Пользователь с id = %d не является владельцем вещи с id = %d", userId, itemId)
             );
