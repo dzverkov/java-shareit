@@ -1,6 +1,5 @@
 package ru.practicum.shareit.item.dao;
 
-
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.item.model.Item;
 
@@ -13,7 +12,7 @@ import java.util.stream.Collectors;
 @Service
 public class ItemDaoImpl implements ItemDao {
 
-    private Map<Long, Item> items = new HashMap<>();
+    private final Map<Long, Item> items = new HashMap<>();
 
     @Override
     public Item addItem(Item item) {

@@ -1,6 +1,8 @@
 package ru.practicum.shareit.item.service;
 
 
+import lombok.RequiredArgsConstructor;
+import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.ItemMapper;
@@ -17,26 +19,23 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class ItemServiceImpl implements ItemService {
 
+    private final ItemMapper mapper = Mappers.getMapper(ItemMapper.class);
     private final ItemDao itemDao;
     private final UserDao userDao;
     private long id = 0;
-
-    public ItemServiceImpl(ItemDao itemDao, UserDao userDao) {
-        this.itemDao = itemDao;
-        this.userDao = userDao;
-    }
 
     @Override
     public ItemDto addItem(ItemDto itemDto, Long userId) {
 
         User user = getUser(userId);
         validateItem(itemDto);
-        Item item = ItemMapper.toItem(itemDto);
+        Item item = mapper.toItem(itemDto);
         item.setId(getNextId());
         item.setOwner(user.getId());
-        return ItemMapper.toItemDto(itemDao.addItem(item));
+        return mapper.toItemDto(itemDao.addItem(item));
     }
 
     @Override
@@ -52,8 +51,8 @@ public class ItemServiceImpl implements ItemService {
         }
         mergeFields(itemDto, existItem);
 
-        validateItem(ItemMapper.toItemDto(existItem));
-        return ItemMapper.toItemDto(itemDao.updateItem(existItem));
+        validateItem(mapper.toItemDto(existItem));
+        return mapper.toItemDto(itemDao.updateItem(existItem));
     }
 
     @Override
@@ -62,7 +61,7 @@ public class ItemServiceImpl implements ItemService {
         if (item == null) {
             throw new ItemNotFoundException(String.format("Вещь с id = %d не найдена.", itemId));
         }
-        return ItemMapper.toItemDto(item);
+        return mapper.toItemDto(item);
     }
 
     @Override
@@ -70,13 +69,13 @@ public class ItemServiceImpl implements ItemService {
         User user = getUser(userId);
 
         List<Item> items = itemDao.getItemsByUserId(user.getId());
-        return items.stream().map(ItemMapper::toItemDto).collect(Collectors.toList());
+        return items.stream().map(mapper::toItemDto).collect(Collectors.toList());
     }
 
     @Override
     public List<ItemDto> searchItems(String text) {
         List<Item> items = itemDao.searchItems(text);
-        return items.stream().map(ItemMapper::toItemDto).collect(Collectors.toList());
+        return items.stream().map(mapper::toItemDto).collect(Collectors.toList());
     }
 
     private void validateItem(ItemDto item) {

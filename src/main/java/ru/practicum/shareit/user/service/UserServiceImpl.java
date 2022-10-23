@@ -1,5 +1,7 @@
 package ru.practicum.shareit.user.service;
 
+import lombok.RequiredArgsConstructor;
+import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.user.User;
@@ -15,19 +17,17 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private UserDao userDao;
+    private final UserMapper mapper = Mappers.getMapper(UserMapper.class);
+    private final UserDao userDao;
     private long id = 0;
-
-    public UserServiceImpl(UserDao userDao) {
-        this.userDao = userDao;
-    }
 
     @Override
     public List<UserDto> getUsers() {
         List<User> users = userDao.getUsers();
-        return users.stream().map(UserMapper::toUserDto).collect(Collectors.toList());
+        return users.stream().map(mapper::toUserDto).collect(Collectors.toList());
     }
 
     @Override
@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
         if (user == null) {
             throw new UserNotFoundException(String.format("Пользователь с id = %d не найден.", userId));
         }
-        return UserMapper.toUserDto(user);
+        return mapper.toUserDto(user);
     }
 
     @Override
@@ -45,7 +45,7 @@ public class UserServiceImpl implements UserService {
         validateUser(userDto);
 
         userDto.setId(getNextId());
-        return UserMapper.toUserDto(userDao.addUser(UserMapper.toUser(userDto)));
+        return mapper.toUserDto(userDao.addUser(mapper.toUser(userDto)));
     }
 
     @Override
@@ -57,7 +57,7 @@ public class UserServiceImpl implements UserService {
         mergeFields(userDto, existUserDto);
         validateUser(existUserDto);
 
-        return UserMapper.toUserDto(userDao.updateUser(UserMapper.toUser(existUserDto)));
+        return mapper.toUserDto(userDao.updateUser(mapper.toUser(existUserDto)));
     }
 
     @Override
