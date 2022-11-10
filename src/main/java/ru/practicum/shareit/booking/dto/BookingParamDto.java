@@ -5,9 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.practicum.shareit.booking.BookingStatus;
 
-import javax.validation.constraints.Future;
 import javax.validation.constraints.FutureOrPresent;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * TODO Sprint add-bookings.
@@ -16,34 +15,17 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class BookingDto {
+public class BookingParamDto {
 
-    @Data
-    public static class UserDto{
-        private Long id;
-    }
-
-    @Data
-    public static class ItemDto{
-        private Long id;
-        private String name;
-    }
-
-    private Long id;
-
-    @FutureOrPresent
-    private LocalDate start;
-    @Future
-    private LocalDate end;
+    @FutureOrPresent(message = "Дата начала не может быть в прошлом")
+    private LocalDateTime start;
+    @FutureOrPresent(message = "Дата окончания не может быть в прошлом")
+    private LocalDateTime end;
 
     private Long itemId;
 
-    //private Long bookerId;
-
-    private ItemDto item;
-    private UserDto booker;
+    private Long bookerId;
 
     private BookingStatus status = BookingStatus.WAITING;
-
 }
 

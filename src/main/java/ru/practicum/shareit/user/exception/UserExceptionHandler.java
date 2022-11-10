@@ -1,6 +1,7 @@
 package ru.practicum.shareit.user.exception;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -32,4 +33,12 @@ public class UserExceptionHandler {
         log.info("ERROR: " + e.getMessage());
         return new ErrorResponse(e.getMessage());
     }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponse handleDataIntegrityViolationException(final DataIntegrityViolationException e) {
+        log.info("ERROR: " + e.getMessage());
+        return new ErrorResponse(e.getMessage());
+    }
+
 }
