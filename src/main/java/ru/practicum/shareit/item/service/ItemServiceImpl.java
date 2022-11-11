@@ -113,14 +113,13 @@ public class ItemServiceImpl implements ItemService {
         Item item = itemRepository.findById(itemId).orElseThrow(
                 () -> new ItemNotFoundException(String.format("Вещь itemId = %d не найден.", itemId)));
 
-        Booking booking = bookingRepository.findFirstByBooker_IdAndItem_IdAndEndBeforeOrderByStartDesc(
+        // Проверка, что комментарий оставляет арендатор вещи
+        bookingRepository.findFirstByBooker_IdAndItem_IdAndEndBeforeOrderByStartDesc(
                 userId,
                 itemId,
-                LocalDateTime.now());
-
-        if (booking == null) {
-            throw new ValidationException("Комментарии может оставлять только арендатор вещи.");
-        }
+                LocalDateTime.now()).orElseThrow(
+                () -> new ValidationException("Комментарии может оставлять только арендатор вещи.")
+        );
 
         Comment comment = mapper.toComment(commentDto);
         comment.setItem(item);
@@ -140,7 +139,6 @@ public class ItemServiceImpl implements ItemService {
         if (item.getAvailable() == null) {
             throw new ValidationException("Значение available = null.");
         }
-
     }
 
     private User getUser(Long userId) {
@@ -161,26 +159,26 @@ public class ItemServiceImpl implements ItemService {
     }
 
     private ItemDto.Booking getLastBooking(Long itemId, Long userId) {
-        Booking booking = bookingRepository.findFirstByItem_IdAndItem_OwnerAndEndBeforeOrderByEndDesc(
+        Optional<Booking> bookingOpt = bookingRepository.findFirstByItem_IdAndItem_OwnerAndEndBeforeOrderByEndDesc(
                 itemId,
                 userId,
                 LocalDateTime.now());
-        if (booking == null) {
+        if (bookingOpt.isEmpty()) {
             return null;
         } else {
-            return new ItemDto.Booking(booking.getId(), booking.getBooker().getId());
+            return new ItemDto.Booking(bookingOpt.get().getId(), bookingOpt.get().getBooker().getId());
         }
     }
 
     private ItemDto.Booking getNextBooking(Long itemId, Long userId) {
-        Booking booking = bookingRepository.findFirstByItem_IdAndItem_OwnerAndEndAfterOrderByEnd(
+        Optional<Booking> bookingOpt = bookingRepository.findFirstByItem_IdAndItem_OwnerAndEndAfterOrderByEnd(
                 itemId,
                 userId,
                 LocalDateTime.now());
-        if (booking == null) {
+        if (bookingOpt.isEmpty()) {
             return null;
         } else {
-            return new ItemDto.Booking(booking.getId(), booking.getBooker().getId());
+            return new ItemDto.Booking(bookingOpt.get().getId(), bookingOpt.get().getBooker().getId());
         }
     }
 
