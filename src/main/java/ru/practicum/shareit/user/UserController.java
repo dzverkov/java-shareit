@@ -2,6 +2,7 @@ package ru.practicum.shareit.user;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.service.UserService;
@@ -20,32 +21,33 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    public List<UserDto> getUsers() {
+    public ResponseEntity<List<UserDto>> getUsers() {
         log.info("Получен запрос на получение всех пользователей.");
-        return userService.getUsers();
+        return ResponseEntity.ok(userService.getUsers());
     }
 
     @GetMapping("/{userId}")
-    public UserDto getUserById(@PathVariable Long userId) {
+    public ResponseEntity<UserDto> getUserById(@PathVariable Long userId) {
         log.info("Получен запрос на получение пользователя с id = {}.", userId);
-        return userService.getUserById(userId);
+        return ResponseEntity.ok(userService.getUserById(userId));
     }
 
     @PostMapping
-    public UserDto addUser(@RequestBody UserDto userDto) {
+    public ResponseEntity<UserDto> addUser(@RequestBody UserDto userDto) {
         log.info("Получен запрос на добавление пользователя.");
-        return userService.addUser(userDto);
+        return ResponseEntity.ok(userService.addUser(userDto));
     }
 
     @PatchMapping("/{userId}")
-    public UserDto updateUser(@RequestBody UserDto userDto, @PathVariable Long userId) {
+    public ResponseEntity<UserDto> updateUser(@RequestBody UserDto userDto, @PathVariable Long userId) {
         log.info("Получен запрос на обновление пользователя с id = {}.", userId);
-        return userService.updateUser(userDto, userId);
+        return ResponseEntity.ok(userService.updateUser(userDto, userId));
     }
 
     @DeleteMapping("/{userId}")
-    public void deleteUserById(@PathVariable Long userId) {
+    public ResponseEntity<Void> deleteUserById(@PathVariable Long userId) {
         log.info("Получен запрос на удаление пользователя с id = {}.", userId);
         userService.deleteUserById(userId);
+        return ResponseEntity.ok().build();
     }
 }

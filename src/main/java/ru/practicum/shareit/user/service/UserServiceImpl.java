@@ -6,9 +6,8 @@ import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserMapper;
-import ru.practicum.shareit.user.dao.UserDao;
+import ru.practicum.shareit.user.dao.UserRepository;
 import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.user.exception.UserEmailIsNotUnique;
 import ru.practicum.shareit.user.exception.UserNotFoundException;
 
 import java.util.List;
@@ -20,55 +19,52 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
+    private final UserRepository userRepository;
     private final UserMapper mapper = Mappers.getMapper(UserMapper.class);
-    private final UserDao userDao;
-    private long id = 0;
 
     @Override
     public List<UserDto> getUsers() {
-        List<User> users = userDao.getUsers();
+        List<User> users = userRepository.findAll();
         return users.stream().map(mapper::toUserDto).collect(Collectors.toList());
     }
 
     @Override
     public UserDto getUserById(Long userId) {
 
-        User user = userDao.getUserById(userId);
-        if (user == null) {
+        Optional<User> user = userRepository.findById(userId);
+        if (user.isEmpty()) {
             throw new UserNotFoundException(String.format("Пользователь с id = %d не найден.", userId));
         }
-        return mapper.toUserDto(user);
+        return mapper.toUserDto(user.get());
     }
 
     @Override
     public UserDto addUser(UserDto userDto) {
         validateUser(userDto);
 
-        userDto.setId(getNextId());
-        return mapper.toUserDto(userDao.addUser(mapper.toUser(userDto)));
+        return mapper.toUserDto(userRepository.save(mapper.toUser(userDto)));
     }
 
     @Override
     public UserDto updateUser(UserDto userDto, Long userId) {
         UserDto existUserDto = getUserById(userId);
-        if (existUserDto == null) {
-            throw new UserNotFoundException(String.format("Пользователь с id = %d не найден.", userId));
-        }
+
         mergeFields(userDto, existUserDto);
         validateUser(existUserDto);
 
-        return mapper.toUserDto(userDao.updateUser(mapper.toUser(existUserDto)));
+        return mapper.toUserDto(userRepository.save(mapper.toUser(existUserDto)));
     }
 
     @Override
     public void deleteUserById(Long userId) {
-        if (userDao.getUserById(userId) == null) {
-            throw new UserNotFoundException(String.format("Пользователь с id = %d не найден.", userId));
-        }
-        userDao.deleteUserById(userId);
+        // Проверяем наличие пользователя, иначе будет выброшено UserNotFoundException
+        getUserById(userId);
+        userRepository.deleteById(userId);
     }
 
     private void validateUser(UserDto user) {
+
+
         if (user.getEmail() == null) {
             throw new ValidationException("Значение email = null.");
         }
@@ -79,17 +75,6 @@ public class UserServiceImpl implements UserService {
         if (!isValidEmail) {
             throw new ValidationException("Значение email не валидно.");
         }
-
-        Optional<User> userWithSameEmail = userDao.getUsers().stream().filter(
-                (u) -> u.getEmail().equals(user.getEmail()) && !u.getId().equals(user.getId())
-        ).findFirst();
-        if (userWithSameEmail.isPresent()) {
-            throw new UserEmailIsNotUnique("Адрес почты не уникален.");
-        }
-    }
-
-    private long getNextId() {
-        return ++id;
     }
 
     private void mergeFields(UserDto source, UserDto target) {

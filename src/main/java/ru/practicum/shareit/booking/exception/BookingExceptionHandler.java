@@ -1,42 +1,41 @@
-package ru.practicum.shareit.user.exception;
+package ru.practicum.shareit.booking.exception;
+
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.practicum.shareit.exception.ErrorResponse;
-import ru.practicum.shareit.exception.ValidationException;
 
 @RestControllerAdvice
 @Slf4j
-public class UserExceptionHandler {
+public class BookingExceptionHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handleUserNotFoundException(final UserNotFoundException e) {
-        log.info("ERROR: " + e.getMessage());
-        return new ErrorResponse(e.getMessage());
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse handleUserEmailIsNotUnique(final UserEmailIsNotUnique e) {
+    public ErrorResponse handleBookingNotFoundException(final BookingNotFoundException e) {
         log.info("ERROR: " + e.getMessage());
         return new ErrorResponse(e.getMessage());
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleValidationException(final ValidationException e) {
+    public ErrorResponse handleBookingWrongStateException(final BookingWrongStateException e) {
         log.info("ERROR: " + e.getMessage());
         return new ErrorResponse(e.getMessage());
     }
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse handleDataIntegrityViolationException(final DataIntegrityViolationException e) {
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleBookerOrOwnerException(final BookerOrOwnerException e) {
+        log.info("ERROR: " + e.getMessage());
+        return new ErrorResponse(e.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleApproveNotOwnerException(final ApproveNotOwnerException e) {
         log.info("ERROR: " + e.getMessage());
         return new ErrorResponse(e.getMessage());
     }
