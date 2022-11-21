@@ -9,11 +9,12 @@ import ru.practicum.shareit.item.model.Item;
 
 @Mapper
 public interface ItemMapper {
+    @Mapping(target = "requestId", source = "request")
     ItemDto toItemDto(Item item);
 
+    @Mapping(target = "request", source = "requestId")
     Item toItem(ItemDto item);
 
-    @Mapping(target = "itemId", source = "item.id")
     @Mapping(target = "authorId", source = "author.id")
     @Mapping(target = "authorName", source = "author.name")
     CommentDto toCommentDto(Comment comment);

@@ -3,6 +3,8 @@ package ru.practicum.shareit.item.service;
 
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.booking.dao.BookingRepository;
@@ -83,10 +85,13 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemDto> getItemsByUserId(Long userId) {
+    public List<ItemDto> getItemsByUserId(Long userId, Integer from, Integer size) {
         User user = getUser(userId);
 
-        List<Item> items = itemRepository.findAllByOwner(user.getId());
+        int page = from / size;
+        PageRequest pageRequest = PageRequest.of(page, size);
+
+        Page<Item> items = itemRepository.findAllByOwner(user.getId(), pageRequest);
         return items.stream().map(item -> {
             ItemDto itemDto = mapper.toItemDto(item);
             itemDto.setLastBooking(getLastBooking(item.getId(), userId));
@@ -97,8 +102,12 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemDto> searchItems(String text) {
-        List<Item> items = itemRepository.searchItems(text);
+    public List<ItemDto> searchItems(String text, Integer from, Integer size) {
+
+        int page = from / size;
+        PageRequest pageRequest = PageRequest.of(page, size);
+
+        Page<Item> items = itemRepository.searchItems(text, pageRequest);
         return items.stream().map(mapper::toItemDto).collect(Collectors.toList());
     }
 

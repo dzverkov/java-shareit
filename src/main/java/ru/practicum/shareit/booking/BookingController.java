@@ -10,6 +10,8 @@ import ru.practicum.shareit.booking.dto.BookingResultDto;
 import ru.practicum.shareit.booking.service.BookingService;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 /**
@@ -34,8 +36,8 @@ public class BookingController {
 
     @PatchMapping("/{bookingId}")
     public ResponseEntity<BookingResultDto> approveBooking(@PathVariable Long bookingId,
-                                           @RequestParam Boolean approved,
-                                           @RequestHeader(name = "X-Sharer-User-Id") Long userId) {
+                                                           @RequestParam Boolean approved,
+                                                           @RequestHeader(name = "X-Sharer-User-Id") Long userId) {
         log.info("Получен запрос на подтверждение или отклонение вещи по запросу bookingId={} от пользователя userId={}.",
                 bookingId, userId);
         return ResponseEntity.ok(bookingService.approveBooking(bookingId, approved, userId));
@@ -43,25 +45,33 @@ public class BookingController {
 
     @GetMapping("/{bookingId}")
     public ResponseEntity<BookingResultDto> getBookingById(@PathVariable Long bookingId,
-                                           @RequestHeader(name = "X-Sharer-User-Id") Long userId) {
+                                                           @RequestHeader(name = "X-Sharer-User-Id") Long userId) {
         log.info("Получен запрос на получение данных о бронировании вещи c bookingId={} от пользователя userId={}.",
                 bookingId, userId);
         return ResponseEntity.ok(bookingService.getBookingById(bookingId, userId));
     }
 
     @GetMapping
-    public ResponseEntity<List<BookingResultDto>> getBookingsByUserId(@RequestParam(required = false, defaultValue = "ALL") String state,
-                                                      @RequestHeader(name = "X-Sharer-User-Id") Long userId) {
+    public ResponseEntity<List<BookingResultDto>> getBookingsByUserId(
+            @RequestParam(required = false, defaultValue = "ALL") String state,
+            @RequestHeader(name = "X-Sharer-User-Id") Long userId,
+            @RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
+            @RequestParam(defaultValue = "10") @Positive Integer size
+    ) {
         log.info("Получен запрос на получение данных о бронированиях пользователя userId={} с парметром {}.",
                 userId, state);
-        return ResponseEntity.ok(bookingService.getBookingsByUserId(state, userId));
+        return ResponseEntity.ok(bookingService.getBookingsByUserId(state, userId, from, size));
     }
 
     @GetMapping("/owner")
-    public ResponseEntity<List<BookingResultDto>> getBookingsItemsByUserId(@RequestParam(required = false, defaultValue = "ALL") String state,
-                                                           @RequestHeader(name = "X-Sharer-User-Id") Long userId) {
+    public ResponseEntity<List<BookingResultDto>> getBookingsItemsByUserId(
+            @RequestParam(required = false, defaultValue = "ALL") String state,
+            @RequestHeader(name = "X-Sharer-User-Id") Long userId,
+            @RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
+            @RequestParam(defaultValue = "10") @Positive Integer size
+    ) {
         log.info("Получен запрос на получение данных о бронировании вещей пользователя userId={} с парметром {}.",
                 userId, state);
-        return ResponseEntity.ok(bookingService.getBookingsItemsByUserId(state, userId));
+        return ResponseEntity.ok(bookingService.getBookingsItemsByUserId(state, userId, from, size));
     }
 }
