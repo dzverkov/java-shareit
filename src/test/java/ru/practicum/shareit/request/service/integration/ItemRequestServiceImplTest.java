@@ -21,14 +21,14 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
+import static org.springframework.test.annotation.DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD;
 
 @Transactional
 @SpringBootTest(
         properties = "db.name=test",
         webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-@DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
+@DirtiesContext(classMode = BEFORE_EACH_TEST_METHOD)
 @ExtendWith(MockitoExtension.class)
 class ItemRequestServiceImplTest {
 
@@ -56,16 +56,20 @@ class ItemRequestServiceImplTest {
         ItemRequest itemRequest = new ItemRequest(1L, "Request description",
                 requester, LocalDateTime.now());
 
-        userRepository.save(user);
-        userRepository.save(requester);
-        itemRequestRepository.save(itemRequest);
+        User userP = userRepository.save(user);
+        User requesterP = userRepository.save(requester);
+
+        itemRequest.setRequester(requesterP);
+        ItemRequest itemRequestP = itemRequestRepository.save(itemRequest);
+        item.setRequest(itemRequestP.getId());
+        item.setOwner(userP.getId());
         itemRepository.save(item);
 
-        List<ItemRequestDto> itemRequests = itemRequestService.getItemRequests(requester.getId());
+        List<ItemRequestDto> itemRequests = itemRequestService.getItemRequests(requesterP.getId());
 
-        assertEquals(itemRequest.getId(), itemRequests.get(0).getId());
-        assertEquals(itemRequest.getDescription(), itemRequests.get(0).getDescription());
-        assertEquals(itemRequest.getRequester().getId(), itemRequests.get(0).getRequester());
+        assertEquals(itemRequestP.getId(), itemRequests.get(0).getId());
+        assertEquals(itemRequestP.getDescription(), itemRequests.get(0).getDescription());
+        assertEquals(itemRequestP.getRequester().getId(), itemRequests.get(0).getRequester());
         assertEquals(1, itemRequests.get(0).getItems().size());
         assertEquals(item.getName(), itemRequests.get(0).getItems().get(0).getName());
         assertEquals(item.getDescription(), itemRequests.get(0).getItems().get(0).getDescription());

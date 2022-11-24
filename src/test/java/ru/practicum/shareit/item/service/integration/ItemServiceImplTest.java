@@ -24,14 +24,14 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
+import static org.springframework.test.annotation.DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD;
 
 @Transactional
 @SpringBootTest(
         properties = "db.name=test",
         webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-@DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
+@DirtiesContext(classMode = BEFORE_EACH_TEST_METHOD)
 @ExtendWith(MockitoExtension.class)
 class ItemServiceImplTest {
 
