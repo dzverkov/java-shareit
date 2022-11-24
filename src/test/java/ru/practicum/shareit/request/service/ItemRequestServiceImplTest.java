@@ -125,8 +125,8 @@ class ItemRequestServiceImplTest {
     void getItemRequestsFromOtherUsers() {
         PageImpl pagedRes = new PageImpl(Collections.singletonList(requests.get(1)));
         when(itemRequestRepository.findAllByRequester_IdIsNotOrderByCreatedDesc(
-                eq(users.get(0).getId())
-                , Mockito.any(Pageable.class))).thenReturn(pagedRes);
+                eq(users.get(0).getId()),
+                Mockito.any(Pageable.class))).thenReturn(pagedRes);
 
         when(itemRepository.findAllByRequest(requests.get(1).getId()))
                 .thenReturn(Collections.singletonList(items.get(1)));

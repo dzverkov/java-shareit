@@ -26,6 +26,7 @@ public class ItemDto {
 
     @Data
     @NoArgsConstructor
+    @AllArgsConstructor
     public static class ItemComment {
         private Long id;
         private String text;
@@ -34,8 +35,10 @@ public class ItemDto {
     }
 
     @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class Booking {
-        private final long id;
-        private final long bookerId;
+        private long id;
+        private long bookerId;
     }
 }

@@ -80,7 +80,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         getUser(userId);
 
         ItemRequest itemRequest = itemRequestRepository.findById(requestId)
-                .orElseThrow(()-> new ItemRequestNotFoundException(
+                .orElseThrow(() -> new ItemRequestNotFoundException(
                         String.format("Запрос на вещь requestId = %d от пользователя userId = %d не найден",
                                 requestId,
                                 userId))

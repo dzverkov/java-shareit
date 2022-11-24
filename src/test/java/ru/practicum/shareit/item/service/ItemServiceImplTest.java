@@ -260,10 +260,10 @@ class ItemServiceImplTest {
         when(commentRepository.save(Mockito.any(Comment.class))).thenReturn(comment1);
 
         assertThrows(UserNotFoundException.class,
-                ()-> itemService.addComment(commentDto, comments.get(0).getItem().getId(),
+                () -> itemService.addComment(commentDto, comments.get(0).getItem().getId(),
                         10L));
         assertThrows(ItemNotFoundException.class,
-                ()-> itemService.addComment(commentDto, 10L,
+                () -> itemService.addComment(commentDto, 10L,
                         comments.get(0).getAuthor().getId()));
 
         when(bookingRepository.findFirstByBooker_IdAndItem_IdAndEndBeforeOrderByStartDesc(
@@ -276,7 +276,7 @@ class ItemServiceImplTest {
                 Mockito.any(LocalDateTime.class))).thenReturn(Optional.of(bookings.get(0)));
 
         assertThrows(ValidationException.class,
-                ()-> itemService.addComment(commentDto, comments.get(0).getItem().getId(),
+                () -> itemService.addComment(commentDto, comments.get(0).getItem().getId(),
                         2L));
 
         CommentDto commentDtoRes = itemService.addComment(commentDto, comments.get(0).getItem().getId(),
