@@ -13,6 +13,7 @@ import ru.practicum.shareit.booking.dto.BookingResultDto;
 import ru.practicum.shareit.booking.exception.ApproveNotOwnerException;
 import ru.practicum.shareit.booking.exception.BookerOrOwnerException;
 import ru.practicum.shareit.booking.exception.BookingNotFoundException;
+import ru.practicum.shareit.booking.exception.BookingWrongStateException;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.dao.ItemRepository;
 import ru.practicum.shareit.item.exception.ItemNotFoundException;
@@ -76,14 +77,6 @@ class BookingServiceImplTest {
         when(userRepository.findById(10L)).thenReturn(Optional.empty());
 
         bookingRepository = mock(BookingRepository.class);
-
-        /*when(bookingRepository.findFirstByItem_IdAndItem_OwnerAndEndBeforeOrderByEndDesc(
-                Mockito.anyLong(), Mockito.anyLong(), Mockito.any(LocalDateTime.class)))
-                .thenReturn(Optional.ofNullable(bookings.get(0)));
-        when(bookingRepository.findFirstByItem_IdAndItem_OwnerAndEndAfterOrderByEnd(
-                Mockito.anyLong(), Mockito.anyLong(), Mockito.any(LocalDateTime.class)))
-                .thenReturn(Optional.ofNullable(bookings.get(1)));*/
-
 
         bookingService = new BookingServiceImpl(
                 bookingRepository,
@@ -203,8 +196,8 @@ class BookingServiceImplTest {
         assertThrows(UserNotFoundException.class,
                 () -> bookingService.getBookingsByUserId("ALL", 10L, 0, 10));
 
-        assertThrows(UserNotFoundException.class,
-                () -> bookingService.getBookingsByUserId("UNKNOWN_STATE", 10L, 0, 10));
+        assertThrows(BookingWrongStateException.class,
+                () -> bookingService.getBookingsByUserId("UNKNOWN_STATE", 1L, 0, 10));
 
         PageImpl pagedRes = new PageImpl(Collections.singletonList(bookings.get(0)));
 

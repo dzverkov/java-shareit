@@ -16,11 +16,13 @@ public class BookingExceptionHandler {
         return new ErrorResponse(e.getMessage());
     }
 
+
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleBookingWrongStateException(final BookingWrongStateException e) {
         return new ErrorResponse(e.getMessage());
     }
+
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
