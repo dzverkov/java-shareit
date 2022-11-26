@@ -201,13 +201,13 @@ class BookingServiceImplTest {
 
         PageImpl pagedRes = new PageImpl(Collections.singletonList(bookings.get(0)));
 
-        when(bookingRepository.findAllByBooker_IdOrderByStartDesc(Mockito.anyLong(), Mockito.any(Pageable.class)))
+        when(bookingRepository.findAllByBooker_Id(Mockito.anyLong(), Mockito.any(Pageable.class)))
                 .thenReturn(pagedRes);
         List<BookingResultDto> bookingResultDtoRes = bookingService.getBookingsByUserId("ALL",
                 1L, 0, 10);
         assertEquals(bookings.get(0).getId(), bookingResultDtoRes.get(0).getId());
 
-        when(bookingRepository.findAllByBooker_IdAndStartLessThanEqualAndEndGreaterThanEqualOrderByStartDesc(
+        when(bookingRepository.findAllByBooker_IdAndStartLessThanEqualAndEndGreaterThanEqual(
                 Mockito.anyLong(),
                 Mockito.any(LocalDateTime.class),
                 Mockito.any(LocalDateTime.class),
@@ -217,7 +217,7 @@ class BookingServiceImplTest {
                 1L, 0, 10);
         assertEquals(bookings.get(0).getId(), bookingResultDtoRes.get(0).getId());
 
-        when(bookingRepository.findAllByBooker_IdAndEndBeforeOrderByStartDesc(
+        when(bookingRepository.findAllByBooker_IdAndEndBefore(
                 Mockito.anyLong(),
                 Mockito.any(LocalDateTime.class),
                 Mockito.any(Pageable.class)))
@@ -226,7 +226,7 @@ class BookingServiceImplTest {
                 1L, 0, 10);
         assertEquals(bookings.get(0).getId(), bookingResultDtoRes.get(0).getId());
 
-        when(bookingRepository.findAllByBooker_IdAndStartAfterOrderByStartDesc(
+        when(bookingRepository.findAllByBooker_IdAndStartAfter(
                 Mockito.anyLong(),
                 Mockito.any(LocalDateTime.class),
                 Mockito.any(Pageable.class)))
@@ -235,7 +235,7 @@ class BookingServiceImplTest {
                 1L, 0, 10);
         assertEquals(bookings.get(0).getId(), bookingResultDtoRes.get(0).getId());
 
-        when(bookingRepository.findAllByBooker_IdAndStatusOrderByStartDesc(
+        when(bookingRepository.findAllByBooker_IdAndStatus(
                 Mockito.anyLong(),
                 Mockito.any(BookingStatus.class),
                 Mockito.any(Pageable.class)))
@@ -244,7 +244,7 @@ class BookingServiceImplTest {
                 1L, 0, 10);
         assertEquals(bookings.get(0).getId(), bookingResultDtoRes.get(0).getId());
 
-        when(bookingRepository.findAllByBooker_IdAndStatusOrderByStartDesc(
+        when(bookingRepository.findAllByBooker_IdAndStatus(
                 Mockito.anyLong(),
                 Mockito.any(BookingStatus.class),
                 Mockito.any(Pageable.class)))
@@ -264,13 +264,13 @@ class BookingServiceImplTest {
 
         PageImpl pagedRes = new PageImpl(Collections.singletonList(bookings.get(0)));
 
-        when(bookingRepository.findAllByOwner_IdOrderByStartDesc(Mockito.anyLong(), Mockito.any(Pageable.class)))
+        when(bookingRepository.findAllByOwner_Id(Mockito.anyLong(), Mockito.any(Pageable.class)))
                 .thenReturn(pagedRes);
         List<BookingResultDto> bookingResultDtoRes = bookingService.getBookingsItemsByUserId("ALL",
                 1L, 0, 10);
         assertEquals(bookings.get(0).getId(), bookingResultDtoRes.get(0).getId());
 
-        when(bookingRepository.findAllByOwner_IdCurrentByDateOrderByStartDesc(
+        when(bookingRepository.findAllByOwner_IdCurrentByDate(
                 Mockito.anyLong(),
                 Mockito.any(LocalDateTime.class),
                 Mockito.any(Pageable.class)))
@@ -279,7 +279,7 @@ class BookingServiceImplTest {
                 1L, 0, 10);
         assertEquals(bookings.get(0).getId(), bookingResultDtoRes.get(0).getId());
 
-        when(bookingRepository.findAllByOwner_IdAndEndBeforeOrderByStartDesc(
+        when(bookingRepository.findAllByOwner_IdAndEndBefore(
                 Mockito.anyLong(),
                 Mockito.any(LocalDateTime.class),
                 Mockito.any(Pageable.class)))
@@ -288,7 +288,7 @@ class BookingServiceImplTest {
                 1L, 0, 10);
         assertEquals(bookings.get(0).getId(), bookingResultDtoRes.get(0).getId());
 
-        when(bookingRepository.findAllByOwner_IdAndStartAfterOrderByStartDesc(
+        when(bookingRepository.findAllByOwner_IdAndStartAfter(
                 Mockito.anyLong(),
                 Mockito.any(LocalDateTime.class),
                 Mockito.any(Pageable.class)))
@@ -297,7 +297,7 @@ class BookingServiceImplTest {
                 1L, 0, 10);
         assertEquals(bookings.get(0).getId(), bookingResultDtoRes.get(0).getId());
 
-        when(bookingRepository.findAllByOwner_IdAndStatusOrderByStartDesc(
+        when(bookingRepository.findAllByOwner_IdAndStatus(
                 Mockito.anyLong(),
                 Mockito.any(BookingStatus.class),
                 Mockito.any(Pageable.class)))
@@ -306,7 +306,7 @@ class BookingServiceImplTest {
                 1L, 0, 10);
         assertEquals(bookings.get(0).getId(), bookingResultDtoRes.get(0).getId());
 
-        when(bookingRepository.findAllByOwner_IdAndStatusOrderByStartDesc(
+        when(bookingRepository.findAllByOwner_IdAndStatus(
                 Mockito.anyLong(),
                 Mockito.any(BookingStatus.class),
                 Mockito.any(Pageable.class)))

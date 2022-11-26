@@ -17,12 +17,10 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Collections;
 
-import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(controllers = ItemController.class)
 class ItemControllerTest {
@@ -56,10 +54,7 @@ class ItemControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(itemDto.getId()), Long.class))
-                .andExpect(jsonPath("$.name", is(itemDto.getName())))
-                .andExpect(jsonPath("$.description", is(itemDto.getDescription())))
-                .andExpect(jsonPath("$.available", is(itemDto.getAvailable()), Boolean.class));
+                .andExpect(content().json(mapper.writeValueAsString(itemDto)));
     }
 
     @Test
@@ -74,10 +69,7 @@ class ItemControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(itemDto.getId()), Long.class))
-                .andExpect(jsonPath("$.name", is(itemDto.getName())))
-                .andExpect(jsonPath("$.description", is(itemDto.getDescription())))
-                .andExpect(jsonPath("$.available", is(itemDto.getAvailable()), Boolean.class));
+                .andExpect(content().json(mapper.writeValueAsString(itemDto)));
     }
 
     @Test
@@ -90,14 +82,8 @@ class ItemControllerTest {
                         .characterEncoding(StandardCharsets.UTF_8)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(itemDto.getId()), Long.class))
-                .andExpect(jsonPath("$.name", is(itemDto.getName())))
-                .andExpect(jsonPath("$.description", is(itemDto.getDescription())))
-                .andExpect(jsonPath("$.available", is(itemDto.getAvailable()), Boolean.class))
-                .andExpect(jsonPath("$.lastBooking.id", is(itemDto.getLastBooking().getId()), Long.class))
-                .andExpect(jsonPath("$.nextBooking.id", is(itemDto.getNextBooking().getId()), Long.class))
-                .andExpect(jsonPath("$.comments[0].id", is(itemDto.getComments().get(0).getId()), Long.class))
-                .andExpect(jsonPath("$.comments[0].text", is(itemDto.getComments().get(0).getText())));
+                .andExpect(content().json(mapper.writeValueAsString(itemDto)))
+        ;
     }
 
     @Test
@@ -112,14 +98,7 @@ class ItemControllerTest {
                         .characterEncoding(StandardCharsets.UTF_8)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id", is(itemDto.getId()), Long.class))
-                .andExpect(jsonPath("$[0].name", is(itemDto.getName())))
-                .andExpect(jsonPath("$[0].description", is(itemDto.getDescription())))
-                .andExpect(jsonPath("$[0].available", is(itemDto.getAvailable()), Boolean.class))
-                .andExpect(jsonPath("$[0].lastBooking.id", is(itemDto.getLastBooking().getId()), Long.class))
-                .andExpect(jsonPath("$[0].nextBooking.id", is(itemDto.getNextBooking().getId()), Long.class))
-                .andExpect(jsonPath("$[0].comments[0].id", is(itemDto.getComments().get(0).getId()), Long.class))
-                .andExpect(jsonPath("$[0].comments[0].text", is(itemDto.getComments().get(0).getText())));
+                .andExpect(content().json(mapper.writeValueAsString(Collections.singletonList(itemDto))));
     }
 
     @Test
@@ -134,14 +113,7 @@ class ItemControllerTest {
                         .characterEncoding(StandardCharsets.UTF_8)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id", is(itemDto.getId()), Long.class))
-                .andExpect(jsonPath("$[0].name", is(itemDto.getName())))
-                .andExpect(jsonPath("$[0].description", is(itemDto.getDescription())))
-                .andExpect(jsonPath("$[0].available", is(itemDto.getAvailable()), Boolean.class))
-                .andExpect(jsonPath("$[0].lastBooking.id", is(itemDto.getLastBooking().getId()), Long.class))
-                .andExpect(jsonPath("$[0].nextBooking.id", is(itemDto.getNextBooking().getId()), Long.class))
-                .andExpect(jsonPath("$[0].comments[0].id", is(itemDto.getComments().get(0).getId()), Long.class))
-                .andExpect(jsonPath("$[0].comments[0].text", is(itemDto.getComments().get(0).getText())));
+                .andExpect(content().json(mapper.writeValueAsString(Collections.singletonList(itemDto))));
     }
 
     @Test
@@ -160,10 +132,6 @@ class ItemControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(commentDto.getId()), Long.class))
-                .andExpect(jsonPath("$.text", is(commentDto.getText())))
-                .andExpect(jsonPath("$.itemId", is(commentDto.getItemId()), Long.class))
-                .andExpect(jsonPath("$.authorId", is(commentDto.getAuthorId()), Long.class))
-                .andExpect(jsonPath("$.authorName", is(commentDto.getAuthorName())));
+                .andExpect(content().json(mapper.writeValueAsString(commentDto)));
     }
 }

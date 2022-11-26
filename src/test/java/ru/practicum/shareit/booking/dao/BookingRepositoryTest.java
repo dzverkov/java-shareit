@@ -72,7 +72,7 @@ class BookingRepositoryTest {
     void findAllByOwner_IdOrderByStartDesc() {
         prepareData();
 
-        List<Booking> res = bookingRepository.findAllByOwner_IdOrderByStartDesc(1L, Pageable.unpaged())
+        List<Booking> res = bookingRepository.findAllByOwner_Id(1L, Pageable.unpaged())
                 .get().collect(Collectors.toList());
 
         assertEquals(1, res.size());
@@ -83,10 +83,10 @@ class BookingRepositoryTest {
     }
 
     @Test
-    void findAllByOwner_IdCurrentByDateOrderByStartDesc() {
+    void findAllByOwner_IdCurrentByDate() {
         prepareData();
 
-        List<Booking> res = bookingRepository.findAllByOwner_IdCurrentByDateOrderByStartDesc(1L,
+        List<Booking> res = bookingRepository.findAllByOwner_IdCurrentByDate(1L,
                         LocalDateTime.now().plusMonths(2),
                         Pageable.unpaged())
                 .get().collect(Collectors.toList());
@@ -99,10 +99,10 @@ class BookingRepositoryTest {
     }
 
     @Test
-    void findAllByOwner_IdAndEndBeforeOrderByStartDesc() {
+    void findAllByOwner_IdAndEndBefore() {
         prepareData();
 
-        List<Booking> res = bookingRepository.findAllByOwner_IdAndEndBeforeOrderByStartDesc(1L,
+        List<Booking> res = bookingRepository.findAllByOwner_IdAndEndBefore(1L,
                         LocalDateTime.now().plusMonths(4),
                         Pageable.unpaged())
                 .get().collect(Collectors.toList());
@@ -115,10 +115,10 @@ class BookingRepositoryTest {
     }
 
     @Test
-    void findAllByOwner_IdAndStartAfterOrderByStartDesc() {
+    void findAllByOwner_IdAndStartAfter() {
         prepareData();
 
-        List<Booking> res = bookingRepository.findAllByOwner_IdAndStartAfterOrderByStartDesc(1L,
+        List<Booking> res = bookingRepository.findAllByOwner_IdAndStartAfter(1L,
                         LocalDateTime.now(),
                         Pageable.unpaged())
                 .get().collect(Collectors.toList());
@@ -131,10 +131,10 @@ class BookingRepositoryTest {
     }
 
     @Test
-    void findAllByOwner_IdAndStatusOrderByStartDesc() {
+    void findAllByOwner_IdAndStatus() {
         prepareData();
 
-        List<Booking> res = bookingRepository.findAllByOwner_IdAndStatusOrderByStartDesc(1L,
+        List<Booking> res = bookingRepository.findAllByOwner_IdAndStatus(1L,
                         BookingStatus.WAITING,
                         Pageable.unpaged())
                 .get().collect(Collectors.toList());

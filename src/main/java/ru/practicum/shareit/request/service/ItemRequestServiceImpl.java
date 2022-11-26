@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.item.dao.ItemRepository;
 import ru.practicum.shareit.item.model.Item;
@@ -60,8 +61,9 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     public List<ItemRequestDto> getItemRequestsFromOtherUsers(Integer from, Integer size, Long userId) {
 
         int page = from / size;
+        Sort sort = Sort.by(Sort.Direction.DESC, "created");
         PageRequest pageRequest = PageRequest.of(page, size);
-        Page<ItemRequest> itemRequests = itemRequestRepository.findAllByRequester_IdIsNotOrderByCreatedDesc(
+        Page<ItemRequest> itemRequests = itemRequestRepository.findAllByRequester_IdIsNot(
                 userId,
                 pageRequest
         );
