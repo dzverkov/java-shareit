@@ -1,5 +1,4 @@
-package ru.practicum.shareit.item.exception;
-
+package ru.practicum.shareit.request.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -8,18 +7,11 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.practicum.shareit.exception.ErrorResponse;
 
 @RestControllerAdvice
-public class ItemExceptionHandler {
+public class ItemRequestExceptionHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handleItemNotFoundException(final ItemNotFoundException e) {
+    public ErrorResponse handleItemRequestNotFoundException(final ItemRequestNotFoundException e) {
         return new ErrorResponse(e.getMessage());
     }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    public ErrorResponse handleItemUpdateException(final ItemUpdateException e) {
-        return new ErrorResponse(e.getMessage());
-    }
-
 }

@@ -66,9 +66,14 @@
 			<version>2.6.1</version>
 		</dependency>
 		<dependency>
-			<groupId>org.postgresql</groupId>
-			<artifactId>postgresql</artifactId>
-			<version>42.3.2</version>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>4.8.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-jsr310</artifactId>
+			<version>2.14.0</version>
 		</dependency>
 	</dependencies>
 
@@ -204,7 +209,7 @@
 											<limit>
 												<counter>LINE</counter>
 												<value>COVEREDRATIO</value>
-												<minimum>0.9</minimum>
+												<minimum>0.8</minimum>
 											</limit>
 											<limit>
 												<counter>BRANCH</counter>

@@ -10,6 +10,8 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.service.ItemService;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 /**
@@ -34,35 +36,42 @@ public class ItemController {
 
     @PatchMapping("/{itemId}")
     public ResponseEntity<ItemDto> updateItem(@RequestBody ItemDto itemDto,
-                              @PathVariable Long itemId,
-                              @RequestHeader(name = "X-Sharer-User-Id") Long userId) {
+                                              @PathVariable Long itemId,
+                                              @RequestHeader(name = "X-Sharer-User-Id") Long userId) {
         log.info("Получен запрос на редактирование вещи, itemId={}, userId={}", itemId, userId);
         return ResponseEntity.ok(itemService.updateItem(itemDto, itemId, userId));
     }
 
     @GetMapping("/{itemId}")
     public ResponseEntity<ItemDto> getItemById(@PathVariable Long itemId,
-                               @RequestHeader(name = "X-Sharer-User-Id") Long userId) {
+                                               @RequestHeader(name = "X-Sharer-User-Id") Long userId) {
         log.info("Получен запрос на получение вещи, itemId={}", itemId);
         return ResponseEntity.ok(itemService.getItemById(itemId, userId));
     }
 
     @GetMapping()
-    public ResponseEntity<List<ItemDto>> getItemsByUserId(@RequestHeader(name = "X-Sharer-User-Id") Long userId) {
+    public ResponseEntity<List<ItemDto>> getItemsByUserId(
+            @RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
+            @RequestParam(defaultValue = "10") @Positive Integer size,
+            @RequestHeader(name = "X-Sharer-User-Id") Long userId) {
         log.info("Получен запрос на получение вещей пользователя, userId={}", userId);
-        return ResponseEntity.ok(itemService.getItemsByUserId(userId));
+        return ResponseEntity.ok(itemService.getItemsByUserId(userId, from, size));
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<ItemDto>> searchItems(@RequestParam String text) {
+    public ResponseEntity<List<ItemDto>> searchItems(
+            @RequestParam String text,
+            @RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
+            @RequestParam(defaultValue = "10") @Positive Integer size
+    ) {
         log.info("Получен запрос на поиск вещей, text={}", text);
-        return ResponseEntity.ok(itemService.searchItems(text));
+        return ResponseEntity.ok(itemService.searchItems(text, from, size));
     }
 
     @PostMapping("/{itemId}/comment")
     public ResponseEntity<CommentDto> addComment(@RequestBody @Valid CommentDto commentDto,
-                                 @PathVariable Long itemId,
-                                 @RequestHeader(name = "X-Sharer-User-Id") Long userId) {
+                                                 @PathVariable Long itemId,
+                                                 @RequestHeader(name = "X-Sharer-User-Id") Long userId) {
         log.info("Получен запрос на добавление комментария, itemId={}, userId={}", itemId, userId);
         return ResponseEntity.ok(itemService.addComment(commentDto, itemId, userId));
     }

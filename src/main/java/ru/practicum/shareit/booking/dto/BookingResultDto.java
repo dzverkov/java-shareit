@@ -28,11 +28,15 @@ public class BookingResultDto {
     private BookingStatus status = BookingStatus.WAITING;
 
     @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class UserDto {
         private Long id;
     }
 
     @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class ItemDto {
         private Long id;
         private String name;
