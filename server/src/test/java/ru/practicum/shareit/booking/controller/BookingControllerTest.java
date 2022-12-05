@@ -117,12 +117,6 @@ class BookingControllerTest {
                         .characterEncoding(StandardCharsets.UTF_8)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-//                .andExpect(jsonPath("$[0].id", is(bookingResultDto.getId()), Long.class))
-//                .andExpect(jsonPath("$[0].start", is(bookingResultDto.getStart().toString())))
-//                .andExpect(jsonPath("$[0].end", is(bookingResultDto.getEnd().toString())))
-//                .andExpect(jsonPath("$[0].item.id", is(bookingResultDto.getItem().getId()), Long.class))
-//                .andExpect(jsonPath("$[0].item.name", is(bookingResultDto.getItem().getName())))
-//                .andExpect(jsonPath("$[0].booker.id", is(bookingResultDto.getBooker().getId()), Long.class))
                 .andExpect(content().json(mapper.writeValueAsString(Collections.singletonList(bookingResultDto))));
     }
 }
